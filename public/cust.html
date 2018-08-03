@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Customers</title>
+    <script src="js/jquery-min.js"></script>
+    <script src="socket.io/socket.io.js"></script>
+</head>
+<body>
+    <h1>Customers As per RK suggestion</h1>
+    <div id="customers"></div>
+    <script>
+        var url = "/customers";
+        $.get(url).then(function(data){
+            data.forEach(cust => {
+              $("#customers").append(`<p>Id :${cust.id} Name: ${cust.name} Loc: ${cust.location}`);
+            });
+        });
+
+        var socket = io();
+        socket.on('connect',function(){
+            console.log("Connected to server");
+
+            socket.on("data",function(data){
+                console.log(data);
+            });
+
+            socket.on("newCustomer",function(customer){
+                console.log(customer);
+                $("#customers").append(`<p>Id :${customer.id} Name: ${customer.name} Loc: ${customer.location}`);
+            });
+        });
+    </script>
+</body>
+
+</html>
